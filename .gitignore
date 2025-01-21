@@ -3,7 +3,6 @@ logs
 *.log
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
@@ -21,8 +20,8 @@ dist-ssr
 .cache
 
 # Environment variables
-*.env
-!.env.example
+.env
+!.env.example  # If you want to include an example environment file for your project
 
 # Editor directories and files
 .vscode/*
@@ -41,4 +40,3 @@ coverage/
 # Operating system files
 Thumbs.db
 .Spotlight-V100
-
