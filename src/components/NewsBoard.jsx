@@ -6,11 +6,11 @@ import "aos/dist/aos.css";
 
 // eslint-disable-next-line react/prop-types
 const NewsBoard = ({ category }) => {
-  useEffect(() => {
-    Aos.init();
-  }, []);
-
   const [articles, setArticles] = useState([]);
+
+  useEffect(() => {
+    Aos.init(); // Initialize AOS for animations
+  }, []);
 
   useEffect(() => {
     const url = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=${
@@ -18,20 +18,33 @@ const NewsBoard = ({ category }) => {
     }`;
     fetch(url)
       .then((response) => response.json())
-      .then((data) => setArticles(data.articles));
+      .then((data) => {
+        // Check if articles data exists
+        if (data.articles) {
+          setArticles(data.articles);
+        } else {
+          console.error("No articles found or invalid response");
+        }
+      })
+      .catch((error) => console.error("Error fetching data:", error));
   }, [category]);
+
   return (
     <div>
       <h2
         data-aos="fade-down"
         data-aos-duration="550"
-        className="text-center py-3 d-flex justify-content-center align-content-center display-1 bg-dark text-light  "
+        className="text-center py-3 d-flex justify-content-center align-content-center display-1 bg-dark text-light"
       >
         LATEST <span className="badge bg-danger">News</span>
       </h2>
-      <div className="row justify-content-center g-4 mt-4 pb-4">
-        {articles.map((news, index) => {
-          return (
+
+      {/* Show loading text until articles are fetched */}
+      {articles.length === 0 ? (
+        <p className="text-center">Loading news...</p>
+      ) : (
+        <div className="row justify-content-center g-4 mt-4 pb-4">
+          {articles.map((news, index) => (
             <NewsItems
               key={index}
               author={news.author}
@@ -41,9 +54,9 @@ const NewsBoard = ({ category }) => {
               urlToImage={news.urlToImage}
               content={news.content}
             />
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
